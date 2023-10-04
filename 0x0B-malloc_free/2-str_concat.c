@@ -1,45 +1,48 @@
 #include "main.h"
-#include <stdii.h>
 #include <stdlib.h>
 
 /**
- * str_concat - concatenates two strings to a newly allocated space in memory
- * @s1: string 1
- * @s2: string 2
- *
- * Return: returns a pointer to the two strings concatenated, or NULL if fails
+ * str_concat - get ends of input and add together for size
+ * @s1: input one to concat
+ * @s2: input two to concat
+ * Return: concat of s1 and s2
  */
 
 char *str_concat(char *s1, char *s2)
 {
-	char *ptr;
-	unsigned int x, len1 = 0, len2 = 0;
 
-	if (!s1)
+	char *conct;
+
+	int i, ci;
+
+	if (s1 == NULL)
 		s1 = "";
-	else
-		for (; s1[len1]; len1++)
-			;
-	if (!s2)
+	if (s2 == NULL)
 		s2 = "";
-	else
-		for (; s2[len2]; len2++)
-			;
-	len2++;
-	ptr = malloc((len1 + len2) * sizeof(char));
+	i = ci = 0;
+	while (s1[i] != '\0')
+		i++;
+	while (s2[ci] != '\0')
+		ci++;
+	conct = malloc(sizeof(char) * (i + ci + 1));
+	if (conct == NULL)
 
-	if (!ptr)
 		return (NULL);
 
-	for (x = 0; x <= (len1 + len2); x++)
+	i = ci = 0;
+	while (s1[i] != '\0')
 	{
-		if (x < len1)
-			ptr[x] = s1[x];
-		else
-			ptr[x] = s2[x - len1];
+		conct[i] = s1[i];
+		i++;
 	}
+	while (s2[ci] != '\0')
 
-	return (ptr);
+	{
+		conct[i] = s2[ci];
+		i++, ci++;
+	}
+	conct[i] = '\0';
+	return (conct);
 }
 
 
