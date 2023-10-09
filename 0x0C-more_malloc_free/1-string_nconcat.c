@@ -1,45 +1,58 @@
 #include "main.h"
-
 /**
- * string_nconcat - concatenate two strings
+ * string_nconcat - a function that concatenates two strings.
  * @s1: first string
  * @s2: second string
- * @n: number 9f byte to concate of string s2
+ * @n: number of bytes to copy from the second string
  *
- * Return: pointer to concateated string or null if it fails
+ * Description:
+ * - The returned pointer shall point to a newly allocated space in memory,
+ *   which contains s1, followed by the first n bytes of s2, and null
+ *   terminated
+ * - If the function fails, it should return NULL
+ * - If n is greater or equal to the length of s2 then use the entire string s2
+ * - if NULL is passed, treat it as an empty string
+ * Return: pointer to the new string
  */
 
-void *malloc_checked(unsigned int b)
+char *string_nconcat(char *s1, char *s2, unsigned int n)
 {
-	int *ptr;
-	umsigned int i, len1, len2;
+	unsigned int nlen, l1 = 0, l2 = 0, i, j, k = 0;
+	char *string;
 
 	if (s1 == NULL)
 		s1 = "";
 	if (s2 == NULL)
 		s2 = "";
 
-	for (len1 = 0; *(len1 + s1); len1++)
-		;
-	for (len2 = 0; *(len2 + s2); len2++)
-		;
+	while (s1[l1])
+		l1++;
+	while (s2[l2])
+		l2++;
 
-	if (len2 < n)
-		n = len2;
+	if (n > l2)
+		nlen = l1 + l2;
+	else
+		nlen = l1 + n;
 
-	ptr = malloc((len1 + n + 1) * (sizeof(char));
-
-	if (!ptr)
-	        return (NULL);
-
-	for (i = 0; i < (len1 + n); i++)
+	string = malloc((nlen + 1) * sizeof(char));
+	if (string == NULL)
 	{
-	         if (i < len1)
-		         ptr[i] = s1[i];
-	         else
-		         ptr[i] = s2[i - len1];
+		return (NULL);
 	}
-	ptr[i] = '\0';
 
-	return (ptr);
+	for (i = 0; s1[i] != '\0'; i++)
+	{
+		string[k] = s1[i];
+		k++;
+	}
+
+	for (j = 0; k < nlen; j++)
+	{
+		string[k] = s2[j];
+		k++;
+	}
+	string[nlen] = '\0';
+
+	return (string);
 }
