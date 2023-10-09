@@ -7,6 +7,7 @@
  *
  * Return: a ponter to the allocated memory
  */
+
 void *malloc_checked(unsigned int b)
 {
 	int *ptr;
@@ -17,5 +18,5 @@ void *malloc_checked(unsigned int b)
 	{
 		exit(98);
 	}
-	return(ptr)
+	return (ptr);
 }
