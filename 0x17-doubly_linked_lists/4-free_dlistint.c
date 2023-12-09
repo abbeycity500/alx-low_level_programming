@@ -1,18 +1,24 @@
 #include "lists.h"
-#include <stdlib.h>
-/**
-  * free_dlistint - free doubly linked list
-  * @head: start of doubly linked list
-  */
 
+/**
+ * free_dlistint - frees a dlistint_t list.
+ * @head: pointer to the list.
+ **/
 void free_dlistint(dlistint_t *head)
 {
-	dlistint_t *hold;
+	dlistint_t *actual_node;
+	dlistint_t *next_node;
 
-		while (head)
+	if (head)
+	{
+		actual_node = head;
+		next_node = head->next;
+		while (next_node)
 		{
-			hold = head;
-			head = (*head).next;
-			free(hold);
+			free(actual_node);
+			actual_node = next_node;
+			next_node = next_node->next;
 		}
+		free(actual_node);
+	}
 }
