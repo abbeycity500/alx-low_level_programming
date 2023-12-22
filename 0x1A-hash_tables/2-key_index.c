@@ -1,15 +1,12 @@
 #include "hash_tables.h"
 
 /**
- * key_index - Getting the index at which a key/value
- *      pair should be stored in array of a hash table.
- * @key: The key to get the index of.
- * @size: The size of the array of the hash table.
- * Created by Chukwudike Igwe
- * Return: The index of the key.
- * Description: Uses the djb2 algorithm.
- */
+  * key_index - that gives yopu the index of a key
+  * @key: is the key
+  * @size: is the size of the array of the hash table
+  * Return: index of a key
+  */
 unsigned long int key_index(const unsigned char *key, unsigned long int size)
 {
-	return (hash_djb2(key) % size);/** returning hash djb2 */
+	return (hash_djb2(key) % size);
 }

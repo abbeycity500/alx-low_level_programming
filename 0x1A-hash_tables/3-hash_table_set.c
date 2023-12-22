@@ -1,53 +1,100 @@
 #include "hash_tables.h"
+#include <string.h>
 
 /**
- * hash_table_set - Add or update an element in a hash table.
- * @ht: A pointer to the hash table.
- * @key: The key to add - cannot be an empty string.
- * @value: The value associated with key.
- * Created by Chukwudike Igwe
- * Return: Upon failure - 0.
- *         Otherwise - 1.
- */
+  * update_key - update value of key if key exists
+  * @h: head of linked list
+  * @key: key of node
+  * @value: value of node
+  * Return: 1 if succesful, 0 if not match, -1 if malloc failed
+  */
+int update_key(hash_node_t **h, const char *key, const char *value)
+{
+	hash_node_t *copy = *h;
+	char *value1;
+
+	for (; copy; copy = copy->next)
+		if (strcmp(copy->key, key) == 0)
+		{
+			value1 = strdup(value);
+			if (!value1)
+				return (-1);
+			free(copy->value);
+			copy->value = value1;
+			return (1);
+		}
+	return (0);
+}
+
+/**
+  * add_node - adds a node to the beginning of a linked list hash_node_t
+  * @h: head of the linked list
+  * @key: key of node
+  * @value: value of node
+  * Return: new head
+  */
+hash_node_t *add_node(hash_node_t **h, const char *key, const char *value)
+{
+	hash_node_t *new_node;
+	char *key1, *value1;
+
+	new_node = malloc(sizeof(hash_node_t));
+	if (!new_node)
+		return (NULL);
+	key1 = strdup(key);
+	if (!key1)
+	{
+		free(new_node);
+		return (NULL);
+	}
+	value1 = strdup(value);
+	if (!value1)
+	{
+		free(new_node);
+		free(key1);
+		return (NULL);
+	}
+
+	new_node->key = key1;
+	new_node->value = value1;
+	new_node->next = *h;
+
+	*h = new_node;
+	return (*h);
+}
+
+/**
+  * hash_table_set - adds an element to the hash table
+  * @ht: is the hash table you want to add or update the key/value to
+  * @key: is the key and can not be an empty string
+  * @value: is the value associated with the key (must be duplicated)
+  * Return: 1 if it succeeded, 0 otherwise
+  */
 int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 {
+	unsigned long int index;
 	hash_node_t *new;
-	char *value_copy;
-	unsigned long int index, i;
+	int update;
 
-	if (ht == NULL || key == NULL || *key == '\0' || value == NULL)
-		return (0);/** Returning 0 */
-
-	value_copy = strdup(value);/** value copy */
-	if (value_copy == NULL)
+	if (!ht || strcmp(key, "") == 0)
 		return (0);
 
 	index = key_index((const unsigned char *)key, ht->size);
-	for (i = index; ht->array[i]; i++)
+
+	update = update_key(&(ht->array[index]), key, value);
+	/* update == 0 when no key was found */
+	if (update == 0)
 	{
-		if (strcmp(ht->array[i]->key, key) == 0)
+		new = add_node(&(ht->array[index]), key, value);
+		if (!new)
 		{
-			free(ht->array[i]->value);/** free ht array value */
-			ht->array[i]->value = value_copy;
-			return (1);/** returning 1 */
+			return (0);
 		}
+		ht->array[index] = new;
 	}
-
-	new = malloc(sizeof(hash_node_t));/** size of hash node */
-	if (new == NULL)
-	{
-		free(value_copy);
-		return (0);/** returning 0 */
-	}
-	new->key = strdup(key);
-	if (new->key == NULL)
-	{
-		free(new);/** free new */
+	/* update == -1 when malloc failed */
+	else if (update == -1)
 		return (0);
-	}
-	new->value = value_copy;
-	new->next = ht->array[index];
-	ht->array[index] = new;/** ht array index */
+	return (1);
 
-	return (1);/** returning 1 */
 }
